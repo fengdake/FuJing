@@ -394,6 +394,11 @@ export default {
     //编辑
     handleEdit(record){
       if(record.jbxxShzt == '派出所审核' || record.jbxxShzt == '总局审核'){
+
+
+
+
+        
         this.$message.warn('该人员已在审批中，不能重复提交审批')
         return
       }
