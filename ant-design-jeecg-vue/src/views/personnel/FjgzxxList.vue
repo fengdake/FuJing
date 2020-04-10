@@ -149,7 +149,7 @@ FjgzxxModal.vue
         :scroll="{ x: 3000}"
       >
         <template
-          v-for="col in ['yhkh','gzffyh','bxjs','bxjnqk','jbgz','jkxKhjx','jkxZqbz','jkxQt','kkxKhkk','kkxGrbx','kkxQt','sfs']"
+          v-for="col in ['bxjs','bxjnqk','jbgz','jkxKhjx','jkxZqbz','jkxQt','kkxKhkk','kkxGrbx','kkxQt']"
           :slot="col"
           slot-scope="text, record, index"
         >
@@ -269,7 +269,7 @@ export default {
         {
           title: '银行卡号',
           align: 'center',
-          width: 200,
+          width: 180,
           dataIndex: 'yhkh',
           scopedSlots: { customRender: 'yhkh' }
         },
