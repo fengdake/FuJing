@@ -1,0 +1,93 @@
+<template>
+  <a-modal
+    :title="title"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    :destroyOnClose='destroyOnClose'
+    @ok="handleOk"
+    @cancel="handleCancel"
+    cancelText="关闭"
+  >
+    <a-spin :spinning="confirmLoading">
+      <a-form :form="form">
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="工资年月">
+          <a-month-picker style="width:100%;"  @change="onChange"/>
+        </a-form-item>
+      </a-form>
+    </a-spin>
+  </a-modal>
+</template>
+
+<script>
+import { postAction, putAction, getAction } from '@/api/manage'
+import { httpAction } from '@/api/manage'
+import pick from 'lodash.pick'
+import moment from 'moment'
+
+export default {
+  name: 'FjgzxxModal',
+  data() {
+    return {
+      title: '操作',
+      visible: false,
+      destroyOnClose: true,
+      model: {},
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 5 }
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 }
+      },
+
+      confirmLoading: false,
+      form: this.$form.createForm(this),
+      validatorRules: {},
+      gzny: '',
+    }
+  },
+  created() {},
+  methods: {
+      onChange(date, dateString) {
+        console.log(date, dateString);
+        this.gzny = dateString
+      },
+    edit() {
+      this.gzny = ''
+      this.visible = true
+    },
+    close() {
+      this.$emit('close')
+      this.visible = false
+    },
+    handleOk() {
+      const that = this
+        let obj ={
+            gzny: this.gzny
+        }
+        that.confirmLoading = true
+        getAction('/rsda/fjgzxx/cjyf', obj)
+        .then(res => {
+          if (res.success == true) {
+            this.$message.success(res.message)
+            that.$emit('ok')
+            that.close()
+          }else{
+            this.$message.error(res.message)
+          }
+        })
+        .finally(() => {
+          this.confirmLoading = false;
+        })
+    },
+    handleCancel() {
+      this.close()
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+</style>

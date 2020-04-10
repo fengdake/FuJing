@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>汉王手写签批测试页面</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+			.style1 {
+				font-size: xx-large;
+				font-family: 宋体, Arial, Helvetica, sans-serif;
+				color: #FF3399;
+			}
+
+			.style2 {
+				font-size: 16px;
+				font-family: 宋体, Arial, Helvetica, sans-serif;
+				color: #FF3399;
+			}
+
+			.style3 {
+				font-size: 12px;
+				font-family: 宋体, Arial, Helvetica, sans-serif;
+				color: #000000;
+			}
+
+			.style4 {
+				font-size: 12px;
+				font-family: 宋体, Arial, Helvetica, sans-serif;
+				color: #FF0000;
+			}
+
+			.input {
+				line-height: 1.499;
+				display: inline-block;
+				font-weight: 400;
+				text-align: center;
+				cursor: pointer;
+				background-image: none;
+				border: 1px solid transparent;
+				white-space: nowrap;
+				padding: 0 15px;
+				font-size: 14px;
+				border-radius: 4px;
+				height: 32px;
+				transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+				position: relative;
+				box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+				color: rgba(0, 0, 0, 0.65);
+				background-color: #fff;
+				border-color: #d9d9d9;
+			}
+			.input:hover{
+				line-height: 1.499;
+				display: inline-block;
+				font-weight: 400;
+				text-align: center;
+				cursor: pointer;
+				background-image: none;
+				border: 1px solid transparent;
+				white-space: nowrap;
+				padding: 0 15px;
+				font-size: 14px;
+				border-radius: 4px;
+				height: 32px;
+				transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+				position: relative;
+				box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+				color: #FFFFFF;
+				background-color: #1890FF;
+				border-color: #1890FF;
+			}
+		</style>
+
+		<script language="javascript" type="text/javascript">
+			penwidth = 3;
+			var obj;
+			
+			function isIE() { //ie?  
+			    if (!!window.ActiveXObject || "ActiveXObject" in window)  
+			        return true;  
+			    else  
+			        return false;  
+			}
+
+			window.onload = function() {
+				if(isIE()){
+					 //document.getElementById("td_HWPenSign").innerHTML = '<object id="HWPenSign" name="HWPenSign" classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3" width="200" height="80"> </object>';
+			     } else {
+			       	 document.getElementById("td_HWPenSign").innerHTML = '<object id="HWPenSign" TYPE="application/x-itst-activex" ALIGN="baseline" BORDER="0" WIDTH="550" HEIGHT="300" clsid="{E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3}" ></object>';       
+			     }
+				
+				obj = document.getElementById("HWPenSign"); 
+			    obj.HWSetBkColor(0xE0F8E0);  
+				obj.HWSetCtlFrame(2, 0x000000);
+				
+				setTimeout(Button1_onclick, 1000);
+			}
+
+			function Button1_onclick() {
+				res = obj.HWInitialize();
+			}
+
+			function Button2_onclick() {
+				var stream;
+				stream = obj.HWFinalize();
+			}
+
+
+			function Button3_onclick() {
+				obj.HWClearPenSign();
+			}
+
+			function Button6_onclick() {
+				obj.HWSetPenColor(0x000000);
+			}
+
+			function Button7_onclick() {
+				obj.HWSetPenColor(0xFF0000);
+			}
+
+			function Button8_onclick() {
+				obj.HWSetPenColor(0x00FF00);
+			}
+
+			function Button9_onclick() {
+				obj.HWSetPenColor(0x0000FF);
+			}
+
+			function Button10_onclick() {
+				penwidth++;
+				if (penwidth > 5)
+					penwidth = 5;
+				obj.HWSetPenWidth(penwidth);
+			}
+
+			function Button11_onclick() {
+				penwidth--;
+				if (penwidth < 1)
+					penwidth = 1;
+				obj.HWSetPenWidth(penwidth);
+			}
+
+			function Button12_onclick() {
+				obj.HWSetPenMode(1);
+			}
+
+			function Button13_onclick() {
+				obj.HWSetPenMode(0);
+			}
+
+			function Button14_onclick_back() {
+				var stream;
+				stream = obj.HWGetBase64Stream(2);
+				alert(stream);
+			}
+
+			function Button14_onclick() {
+				var local_url = document.location.href;
+				var get = local_url.indexOf("sfzh");
+				var sfzh = 'qianming';
+				if (get != -1) {
+					var get_par = local_url.slice('sfzh'.length + get + 1);
+					var nextPar = get_par.indexOf("&");
+					if (nextPar != -1) {
+						get_par = get_par.slice(0, nextPar);
+					}
+
+					sfzh = get_par;
+				}
+
+				var fileName = 'qianming_' + Date.parse(new Date()) + '.png';
+
+				var stream;
+				stream = obj.HWGetBase64Stream(2);
+
+				var formData = new FormData();
+				formData.append("fileStr", stream);
+				var oReq = new XMLHttpRequest();
+				oReq.onreadystatechange = function() {
+					if (oReq.readyState == 4) {
+						if (oReq.status == 200) {
+							var result = JSON.parse(oReq.response);
+							if (result.success) {
+								window.localStorage.setItem('QmFilePath', result.message);
+								var stream;
+								stream = obj.HWFinalize();
+							} else {
+								alert(result.message);
+							}
+						}
+					}
+				}
+				oReq.open("POST", "https://" + document.location.host + "/jeecg-boot/sys/common/uploadBase64?zjhm=" + sfzh);
+				oReq.send(formData);
+			}
+
+			function Button15_onclick() {
+				obj.HWSetFilePath("e:\\sign.png");
+				obj.HWSaveFile();
+			}
+
+			function signComplete() {
+				Button14_onclick();
+			}
+
+			function signRestart() {;
+			}
+		</script>
+
+	</head>
+	<body style="width: 677px;height: 455px;text-align: center;margin: 0px;">
+		<table width="100%" border="0" align="center" cellpadding="3" cellspacing="0">
+			<tr class="style7">
+				<td id="td_HWPenSign">
+					<object id="HWPenSign" name="HWPenSign" classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3" width="550" height="300"> </object>
+					</object>
+				</td>
+			</tr>
+		</table>
+		<!--
+		<p>&nbsp;
+		</p>
+		<p>&nbsp;
+		</p>
+		<p style="margin-left: 0px">
+			签名控制：
+			<input id="button1" class="input" type="button" value="初始化设备" onclick="return Button1_onclick()" />
+			&nbsp;&nbsp;
+			<input id="button2" class="input" type="button" value="关闭设备" onclick="return Button2_onclick()" />
+			&nbsp;&nbsp;
+			<input id="Button3" class="input" type="button" value="重新签名" onclick="return Button3_onclick()" />
+			<br><br>
+			= 画笔控制：
+			<input id="Button6" type="button" value="黑色" onclick="return Button6_onclick()" />
+			&nbsp;&nbsp;&nbsp;
+			<input id="Button7" type="button" value="红色" onclick="return Button7_onclick()" />
+			&nbsp;&nbsp;&nbsp;
+			<input id="Button8" type="button" value="绿色" onclick="return Button8_onclick()" />
+			&nbsp;&nbsp;&nbsp;
+			<input id="Button9" type="button" value="蓝色" onclick="return Button9_onclick()" />
+			<br><br>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+			<input id="Button10" type="button" value="笔宽加粗" onclick="return Button10_onclick()" />
+			&nbsp;&nbsp;&nbsp;
+			<input id="Button11" type="button" value="笔宽减细" onclick="return Button11_onclick()" />
+			<br><br>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+			<input id="Button12" type="button" value="压力笔" onclick="return Button12_onclick()" />
+			&nbsp;&nbsp;&nbsp;
+			<input id="Button13" type="button" value="钢笔" onclick="return Button13_onclick()" />
+			<br><br>
+			签名图像:
+			&nbsp;&nbsp;<input id="Button14" type="button" value="Base64Stream" onclick="return Button14_onclick()" />
+			&nbsp;&nbsp;&nbsp;
+			<input id="Button15" type="button" value="保存图像" onclick="return Button15_onclick()" />
+			<input id="Button15" type="button" value="保存图像" onclick="return Button16_onclick()" />
+			&nbsp;&nbsp;
+			<br><br>
+
+		</p>
+		-->
+	</body>
+</html>

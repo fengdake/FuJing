@@ -1,0 +1,166 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* Custom, iPhone Retina */ 
+@media only screen and (min-width : 320px){
+	.mainbox{width: 100%;}
+	.mainbox-item-3{width:50%}
+}
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px){
+	.mainbox{width: 100%;}
+	.mainbox-item-3{width:50%}
+}
+/* Small Devices, Tablets */ 
+@media only screen and (min-width : 768px){
+	.mainbox{width: 100%;}
+	.mainbox-item-3{width:33.333%}
+}
+/* Medium Devices, Desktops */ 
+@media only screen and (min-width : 992px){
+	.mainbox{width: 900px;margin: 0 auto;}
+	.mainbox-item-3{width:25%}
+}
+/* Large Devices, Wide Screens */ 
+@media only screen and (min-width : 1200px){
+	.mainbox{width: 1200px;margin: 0 auto;}
+	.mainbox-item-3{width:25%}
+}
+
+.flex{
+	display:box;
+	display:-webkit-box;
+	display:-webkit-flex; 
+	display:-moz-box; 
+	display:-ms-flexbox; 
+	display:flex;
+}
+.flex-1{
+	-prefix-box-flex: 1; 
+	-webkit-box-flex: 1; 
+	-webkit-flex: 1; 
+	-moz-box-flex: 1; 
+	-ms-flex: 1; 
+	flex: 1; 
+}
+.flex-center{
+	 -webkit-justify-content: center;
+	  -moz-justify-content: center;
+	  -ms-justify-content: center;
+	  -o-justify-content: center;
+	  justify-content: center;
+}
+.flex-center-between{
+	 -webkit-justify-content: space-between;
+	  -moz-justify-content: between;
+	  -ms-justify-content: between;
+	  -o-justify-content: between;
+	  justify-content: between;
+}
+.flex-v-center{
+	-webkit-align-items:center;
+	 -moz-align-items:center;
+	 -ms-align-items:center;
+	 -o-align-items:center;
+	 align-items:center;
+}
+.flex-row{
+	/*方向*/
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  -o-flex-direction: row; 
+  flex-direction:row; 
+}
+.flex-wrap{
+	/*父元素-横向换行 */
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  flex-wrap:wrap;
+}
+
+.exlips{
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.center{text-align: center;}
+.left{float: left;}
+.right{float: right;}
+.clearfix:after {content:"."; display:block; height:0; visibility:hidden; clear:both; }
+.popupApply-mask{position: absolute;top: 0;left: 0; width: 100%;height: 100%;z-index: 400;background-color: rgba(0, 0, 0, 0.6)}
+.cf{color: #fff;}
+.bold{font-weight: bold;}
+.f16{font-size: 16px;}
+.f18{font-size: 18px;}
+.f30{font-size: 30px;}
+.f32{font-size: 3px;}
+.common_color{color: #47a6ff;}
+.common_bg{background-color: #47a6ff;color: #fff;}
+/* margin */
+.mt_10{margin-top: 10px;}
+.mt_20{margin-top: 20px;}
+.mt_30{margin-top: 30px;}
+.mr_10{margin-right: 10px;}
+.mr_20{margin-right: 20px;}
+.mr_30{margin-right: 30px;}
+.ml_10{margin-left: 10px;}
+.ml_20{margin-left: 20px;}
+.ml_30{margin-left: 30px;}
+/* padding */
+.pl-10{padding-left: 10px;}
+.pl-20{padding-left: 20px;}
+.pl-30{padding-left: 30px;}
+.pr-10{padding-right: 10px;}
+.pr-20{padding-right: 20px;}
+.pr-30{padding-right: 30px;}
+.pb-10{padding-bottom: 10px;}
+.pb-20{padding-bottom: 20px;}
+.pb-30{padding-bottom: 30px;}
