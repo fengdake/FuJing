@@ -46,21 +46,23 @@
             </a-col>
             <a-col :md="6" :sm="8">
               <a-form-item label="所属单位">
-                <a-select showSearch v-model="queryParam.ssdw" placeholder="请选择所在单位">
-                  <a-select-option v-for="(item,index) in ssdwlist" :key="index" :value="item.text">
-                    <span
-                      style="display: inline-block;width: 100%"
-                      :title=" item.text || item.label "
-                    >{{ item.text || item.label }}</span>
+                <a-select
+                  showSearch
+                  v-model="queryParam.ssdw"
+                  placeholder="请选择所在单位">
+                  <a-select-option
+                    v-for="(item,index) in ssdwlist"
+                    :key="index"
+                    :value="item.text">
+                  <span style="display: inline-block;width: 100%" :title=" item.text || item.label ">
+                    {{ item.text || item.label }}
+                  </span>
                   </a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
-              <a-form-item
-                label="档案出生年月"
-                v-if="queryParam.dacsny == '' || queryParam.dacsny == null"
-              >
+              <a-form-item label="档案出生年月" v-if="queryParam.dacsny == '' || queryParam.dacsny == null">
                 <a-month-picker
                   style="width:100%;"
                   placeholder="请输入档案出生年月"
@@ -101,9 +103,9 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button type="primary" icon="audit" @click="shenHe">一键审核</a-button>
-      <!-- <a-button type="primary" icon="download" class="moBan" @click="handleExportXls('辅警人员基本信息')">导出</a-button> -->
-      <!-- <a-dropdown v-if="selectedRowKeys.length > 0">
+      <a-button @click="handleAdd" v-has="'add:zj'" type="primary" icon="plus">新增</a-button>
+      <a-button type="primary" icon="download" class="moBan" @click="handleExportXls('辅警人员基本信息')">导出</a-button>
+      <a-dropdown v-if="selectedRowKeys.length > 0" v-has="'add:zj'">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel">
             <a-icon type="delete" />删除
@@ -113,7 +115,7 @@
           批量操作
           <a-icon type="down" />
         </a-button>
-      </a-dropdown>-->
+      </a-dropdown>
     </div>
 
     <!-- table区域-begin -->
@@ -137,56 +139,51 @@
         :scroll="{ x: 3500}"
       >
         <template slot="taskResult" slot-scope="text" style="width: 100%">
-          <font
-            :title="text"
-            style=" display: inline-block;width:100px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;line-height: 100%"
-          >{{text}}</font>
-        </template>
+            <font
+              :title="text"
+              style=" display: inline-block;width:100px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;line-height: 100%"
+            >{{text}}</font>
+          </template>
         <span slot="action" slot-scope="text, record">
-          <a @click="handleShenHe(record)">审核</a>
+          <a @click="handleChaKan(record)" >查看</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)" :disabled="disabledAuth('cz:fj')">编辑</a>
 
-          <!-- <a @click="handleChaKan(record)">查看</a> -->
+          <a-divider type="vertical"/>
+          <a-popconfirm title="确定删除吗?" :disabled="disabledAuth('cz:fj')" @confirm="() => handleDelete(record.id)">
+            <a>删除</a>
+          </a-popconfirm>
+          
         </span>
       </a-table>
     </div>
     <!-- table区域-end -->
 
     <!-- 表单区域 -->
-    <!-- 编辑审核页面 -->
-    <sh :sh="sh" ref="modalForm" @Refresh="Refresh"></sh>
-    <!-- 一键审核页面 -->
-    <jbxxsh ref="zsh" :sh="sh" @Refresh="Refresh"></jbxxsh>
-    <!-- 新增审核页面 -->
-    <addsh ref="xinzengSh" :sh="sh" @Refresh="Refresh"></addsh>
+    <fjJbxx-modal ref="modalForm" @Refresh="Refresh"></fjJbxx-modal>
+    <chakanjbxx ref="chakan"></chakanjbxx>
   </a-card>
 </template>
 
 <script>
-import sh from './modules/fjJbxxpcsModal'
-import jbxxsh from './modules/jbxxsh'
-import addsh from './modules/addsh'
-import moment from 'moment'
-import { ajaxGetSelectItems } from '@/api/api'
+import FjJbxxModal from './modules/FjJbxxModal'
+import chakanjbxx from './modules/chakanjbxx'
+import {ajaxGetSelectItems} from '@/api/api'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import { DisabledAuthFilterMixin } from '@/mixins/DisabledAuthFilterMixin'
+import moment from 'moment'
+import {DisabledAuthFilterMixin} from '@/mixins/DisabledAuthFilterMixin'
 
 export default {
   name: 'FjJbxxList',
-  mixins: [JeecgListMixin, DisabledAuthFilterMixin],
+  mixins: [JeecgListMixin,DisabledAuthFilterMixin],
   components: {
-    sh,
-    jbxxsh,
-    addsh
+    FjJbxxModal,chakanjbxx
   },
   data() {
     return {
       description: '辅警人员基本信息管理页面',
-      queryParam: {
-        dacsny: ''
-      },
       monthFormat: 'YYYY-MM',
       mode1: 'month',
-      sh: '派出所审核',
       // 表头
       columns: [
         {
@@ -194,7 +191,7 @@ export default {
           dataIndex: '',
           key: 'rowIndex',
           align: 'center',
-          ssdwlist: [],
+          ssdwlist:[],
           customRender: function(t, r, index) {
             return parseInt(index) + 1
           },
@@ -368,21 +365,16 @@ export default {
           dataIndex: 'czdz'
         },
         {
-          title: '审核结果',
-          align: 'center',
-          dataIndex: 'jbxxShzt'
-        },
-        {
           title: '操作',
           dataIndex: 'action',
           align: 'center',
           scopedSlots: { customRender: 'action' },
-          width: 100,
+          width: 150,
           fixed: 'right'
         }
       ],
       url: {
-        list: '/rsda/fjJbxx/pcsList',
+        list: '/rsda/fjJbxx/list',
         delete: '/rsda/fjJbxx/delete',
         deleteBatch: '/rsda/fjJbxx/deleteBatch',
         exportXlsUrl: 'rsda/fjJbxx/exportXls',
@@ -392,7 +384,7 @@ export default {
   },
   created() {
     //获取字典数据
-    this.initDictData()
+    this.initDictData();
   },
   computed: {
     importExcelUrl: function() {
@@ -402,38 +394,36 @@ export default {
   methods: {
     moment,
     initDictData() {
-      ajaxGetSelectItems('znpt_data.sys_depart,depart_name,org_code,org_code', null).then(res => {
+      ajaxGetSelectItems('znpt_data.sys_depart,depart_name,org_code,org_code', null).then((res) => {
         if (res.success) {
-          this.ssdwlist = res.result
+          this.ssdwlist = res.result;
         }
-      })
+      });
     },
-    handleChange(value, str) {
-      this.queryParam.dacsny = str+'-01'
-      console.log(this.queryParam.dacsny)
+    handleChange(value,str) {
+      this.queryParam.dacsny = str
+    },
+    handlePanelChange1(value, mode) {
+      console.log(value)
+      queryParam.dacsny = value;
+      this.mode1 = 'month';
     },
     Refresh() {
       this.loadData()
     },
-    //一键审核
-    shenHe() {
-      this.$refs.zsh.edit('总')
-      this.$refs.zsh.title = '审核'
+    //编辑
+    handleEdit(record){
+      if(record.jbxxShzt == '派出所审核' || record.jbxxShzt == '总局审核'){
+        this.$message.warn('该人员已在审批中，不能重复提交审批')
+        return
+      }
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "编辑";
     },
     //查看
-    handleChaKan(record) {
-      this.$refs.chakan.edit(record)
-      this.$refs.chakan.title = '查看基本信息'
-    },
-    //审核
-    handleShenHe(record) {
-      if (record.jbxxsfzh == '' || record.jbxxsfzh == null) {
-        this.$refs.xinzengSh.edit(record)
-        this.$refs.xinzengSh.title = '审核'
-      } else {
-        this.$refs.modalForm.edit(record)
-        this.$refs.modalForm.title = '审核'
-      }
+    handleChaKan(record){
+      this.$refs.chakan.edit(record);
+      this.$refs.chakan.title = "查看基本信息";
     }
   }
 }

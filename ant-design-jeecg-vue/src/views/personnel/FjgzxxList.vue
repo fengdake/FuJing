@@ -1,4 +1,3 @@
-FjgzxxModal.vue
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
@@ -384,7 +383,7 @@ export default {
       this.queryParam.gzksny = value[0]
       this.queryParam.gzjsny = value[1]
     },
-    handlePanelChange2(value, mode, dateString) {
+    handlePanelChange2(value, mode) {
       this.queryParam.gzksny = value[0]
       this.queryParam.gzjsny = value[1]
       this.mode2 = [mode[0] === 'date' ? 'month' : mode[0], mode[1] === 'date' ? 'month' : mode[1]]
