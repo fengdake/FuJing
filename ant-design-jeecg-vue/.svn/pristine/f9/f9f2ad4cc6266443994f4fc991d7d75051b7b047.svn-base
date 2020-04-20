@@ -369,7 +369,7 @@ export default {
         {
           title: '审批人',
           align: 'center',
-          dataIndex: 'gzxxSpr'
+          dataIndex: 'spr'
         },
         {
           title: '审批结果',
@@ -500,12 +500,6 @@ export default {
     close(queryParam){
       this.queryParam = queryParam
       this.loadData(1);
-    },
-    //重置
-    searchReset() {
-      this.queryParam = {}
-      this.loadData(1);
-      this.$refs.gaoji.searchReset()
     },
   }
 }

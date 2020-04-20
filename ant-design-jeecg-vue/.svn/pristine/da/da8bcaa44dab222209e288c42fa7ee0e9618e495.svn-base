@@ -91,7 +91,7 @@
                 style="margin-left: 8px"
               >重置</a-button>
             </a-col>
-          </span>
+            </span>
           <a-col :md="6" :sm="8">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="superQuery" icon="filter">高级查询</a-button>
@@ -153,12 +153,6 @@
         :scroll="{ x: 2000}"
         @change="handleTableChange"
       >
-        <template slot="taskResult" slot-scope="text" style="width: 100%">
-          <font
-            :title="text"
-            style=" display: inline-block;width:100px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;line-height: 100%"
-          >{{text}}</font>
-        </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleChaKan(record)">查看</a>
           <a-divider type="vertical" />
@@ -181,14 +175,14 @@
     <fzxx-modal ref="modalForm" @modalFormOk="modalFormOk"></fzxx-modal>
     <chakanfz ref="chakan"></chakanfz>
     <!-- 高级查询 -->
-    <gjcx ref="gaoji" @close="close"></gjcx>
+    <gjcx ref='gaoji' @close='close'></gjcx>
   </a-card>
 </template>
 
 <script>
 import FzxxModal from './modules/FzxxModal'
 import chakanfz from './modules/chakanFzxx'
-import gjcx from './modules/Fjjbxxgjcx' //高级查询
+import gjcx from './modules/Fjjbxxgjcx'//高级查询
 import { ajaxGetSelectItems } from '@/api/api'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { DisabledAuthFilterMixin } from '@/mixins/DisabledAuthFilterMixin'
@@ -283,8 +277,7 @@ export default {
         {
           title: '发放品种',
           align: 'center',
-          dataIndex: 'ffpz',
-          scopedSlots: { customRender: 'taskResult' },
+          dataIndex: 'ffpz'
         },
         {
           title: '是否发放',
@@ -349,18 +342,12 @@ export default {
       this.$refs.chakan.title = '查看服装信息'
     },
     //高级查询
-    superQuery() {
+    superQuery(){
       this.$refs.gaoji.dakai()
     },
-    close(queryParam) {
+    close(queryParam){
       this.queryParam = queryParam
-      this.loadData(1)
-    },
-    //重置
-    searchReset() {
-      this.queryParam = {}
       this.loadData(1);
-      this.$refs.gaoji.searchReset()
     },
   }
 }

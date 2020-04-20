@@ -116,7 +116,7 @@ FjgzxxModal.vue
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange"
-        :scroll="{ x: 3500}"
+        :scroll="{ x: 2800}"
       >
         <span slot="action" slot-scope="text, record">
           <a @click="handleShenHe(record)">审核</a>
@@ -270,7 +270,7 @@ export default {
         {
           title: '审批人',
           align: 'center',
-          dataIndex: 'gzxxSpr'
+          dataIndex: 'spr'
         },
         {
           title: '审批结果',

@@ -270,7 +270,7 @@ export default {
         {
           title: '审批人',
           align: 'center',
-          dataIndex: 'gzxxSpr'
+          dataIndex: 'spr'
         },
         {
           title: '审批结果',

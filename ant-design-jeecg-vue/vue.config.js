@@ -64,8 +64,9 @@ module.exports = {
       },*/
       '/jointertech-fj': {
         // target: 'http://localhost:8080', //请求本地 需要jeecg-boot后台项目
-        // target: 'http://192.168.2.163:8066', //请求本地 需要jeecg-boot后台项目
-        target: 'http://192.168.2.118:8066', //请求本地 需要jeecg-boot后台项目
+        // target: 'http://212.129.130.163:8010', //请求本地 需要jeecg-boot后台项目
+        // target: 'http://192.168.2.163:8080', //请求本地 需要jeecg-boot后台项目
+        target: 'http://192.168.3.5:8066', //请求本地 需要jeecg-boot后台项目
   ws: false,
   changeOrigin: true
       },

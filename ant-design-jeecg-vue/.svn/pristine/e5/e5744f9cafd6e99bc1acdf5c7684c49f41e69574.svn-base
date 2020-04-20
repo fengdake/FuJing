@@ -11,9 +11,6 @@
   >
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="审批人">
-          <a-input v-model="shenpiren" disabled />
-        </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="审核结果">
           <a-select style="width: 100%" v-model="shjg">
             <a-select-option
@@ -33,7 +30,6 @@
 
 <script>
 import { postAction, putAction, getAction } from '@/api/manage'
-// import { mapActions, mapGetters } from 'vuex'
 import { httpAction } from '@/api/manage'
 import pick from 'lodash.pick'
 import moment from 'moment'
@@ -62,15 +58,12 @@ export default {
       shyj: '',
       valueList: [],
       leibie: '',
-      shujvid: '',
-      shenpiren: '',
+      shujvid: ''
     }
   },
   props: ['sh'],
   created() {},
   methods: {
-    // ...mapActions(['Logout']),
-    // ...mapGetters(['nickname', 'avatar', 'userInfo']),
     edit(record, e) {
       console.log(record)
       console.log(e)
@@ -105,7 +98,6 @@ export default {
         this.leibie = '双'
         this.shujvid = ''
       }
-      this.shenpiren = this.$store.state.user.realname//获取登录人
       this.visible = true
     },
     close() {

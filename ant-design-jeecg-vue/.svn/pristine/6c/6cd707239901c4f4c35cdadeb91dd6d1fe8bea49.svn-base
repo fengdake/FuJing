@@ -355,13 +355,7 @@ export default {
     close(queryParam) {
       this.queryParam = queryParam
       this.loadData(1)
-    },
-    //重置
-    searchReset() {
-      this.queryParam = {}
-      this.loadData(1);
-      this.$refs.gaoji.searchReset()
-    },
+    }
   }
 }
 </script>
