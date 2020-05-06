@@ -429,13 +429,13 @@ export default {
       if (target) {
         target[column] = value
         target.sfs =
-          (Number(target.jbgz) +
+          Number(target.jbgz) +
           Number(target.jkxKhjx) +
           Number(target.jkxZqbz) +
           Number(target.jkxQt) -
           Number(target.kkxKhkk) -
           Number(target.kkxGryl) -Number(target.kkxGrylbx) -Number(target.kkxGrsy) -Number(target.kkxGrgjj) -
-          Number(target.kkxQt)).toFixed(2)
+          Number(target.kkxQt)
         console.log(target.sfs)
         this.dataSource = newData
       }

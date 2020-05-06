@@ -22,22 +22,20 @@ FjgzxxModal.vue
                 <a-input placeholder="请输入辅警编号" v-model="queryParam.fjbh"></a-input>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="所属单位">
-                <a-select showSearch v-model="queryParam.ssdw" placeholder="请选择所在单位">
-                  <a-select-option v-for="(item,index) in ssdwlist" :key="index" :value="item.text">
-                    <span
-                      style="display: inline-block;width: 100%"
-                      :title=" item.text || item.label "
-                    >{{ item.text || item.label }}</span>
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+            <a-form-item label="所属单位">
+              <a-select showSearch v-model="queryParam.ssdw" placeholder="请选择所在单位">
+                <a-select-option v-for="(item,index) in ssdwlist" :key="index" :value="item.text">
+                  <span
+                    style="display: inline-block;width: 100%"
+                    :title=" item.text || item.label "
+                  >{{ item.text || item.label }}</span>
+                </a-select-option>
+              </a-select>
+            </a-form-item>
             <a-col :md="6" :sm="8">
               <a-form-item label="级别">
                 <a-select v-model="queryParam.jb">
-                  <a-select-option value="实习辅警">实习辅警</a-select-option>审批人
+                  <a-select-option value="实习辅警">实习辅警</a-select-option>
                   <a-select-option value="四级辅警">四级辅警</a-select-option>
                   <a-select-option value="三级辅警">三级辅警</a-select-option>
                   <a-select-option value="二级辅警">二级辅警</a-select-option>
@@ -48,16 +46,16 @@ FjgzxxModal.vue
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
-              <a-form-item label="审批结果">
-                <a-select v-model="queryParam.fjshzt">
-                  <a-select-option value="通过">通过</a-select-option>
-                  <a-select-option value="不通过">不通过</a-select-option>
+              <a-form-item label="审核结果">
+                <a-select v-model="queryParam.spjg">
+                  <a-select-option value="审核完成">通过</a-select-option>
+                  <a-select-option value="退回">不通过</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
-                <a-form-item label="工资年月">
-                  <a-range-picker
+              <a-form-item label="工资年月">
+                <a-range-picker
                   :placeholder="['开始日期', '结束日期']"
                   format="YYYY-MM"
                   :value="[queryParam.gzksny,queryParam.gzjsny]"
@@ -65,7 +63,7 @@ FjgzxxModal.vue
                   @panelChange="handlePanelChange2"
                   @change="handleChange"
                 />
-                </a-form-item>
+              </a-form-item>
             </a-col>
           </template>
           <a-col :md="6" :sm="8">
@@ -90,7 +88,7 @@ FjgzxxModal.vue
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAll" type="primary" icon="audit">一键审批</a-button>
+      <a-button type="primary" class="moBan" icon="download" @click="handleExportXls('辅警工资信息')">导出</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel">
@@ -128,37 +126,34 @@ FjgzxxModal.vue
         @change="handleTableChange"
         :scroll="{ x: 3500}"
       >
-        <span slot="action" slot-scope="text, record">
-          <a @click="handleShenHe(record)">审核</a>
-        </span>
       </a-table>
     </div>
     <!-- table区域-end -->
 
     <!-- 表单区域 -->
-    <sh ref="shenhe" :sh="sh" @ok="modalFormOk"></sh>
+    <zjshlsck ref="ckls" @ok="modalFormOk"></zjshlsck>
   </a-card>
 </template>
 
 <script>
 import { postAction, putAction, getAction } from '@/api/manage'
-import sh from './modules/sh'
-import {ajaxGetSelectItems} from '@/api/api'
+import zjshlsck from './modules/zjshlsck'
+import { ajaxGetSelectItems } from '@/api/api'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 
 export default {
   name: 'FjgzxxList',
   mixins: [JeecgListMixin],
   components: {
-    sh
+    zjshlsck
   },
   data() {
     return {
       description: '辅警工资信息管理页面',
       monthFormat: 'YYYY-MM',
-      sh: '派出所审核',
       mode2: ['month', 'month'],
-      ssdwlist:[],
+      ssdwlist: [],
+      sh: '总局审核',
       // 表头
       columns: [
         {
@@ -202,13 +197,13 @@ export default {
           title: '级别',
           align: 'center',
           dataIndex: 'jb',
-           width: 100
+          width: 100
         },
         {
           title: '辅警编号',
           align: 'center',
           dataIndex: 'fjbh',
-           width: 100
+          width: 100
         },
         {
           title: '减少时间',
@@ -286,28 +281,17 @@ export default {
           title: '审批结果',
           align: 'center',
           dataIndex: 'spjg'
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          align: 'center',
-          scopedSlots: { customRender: 'action' },
-          width: 100,
-          fixed: 'right'
         }
       ],
       url: {
-        list: '/rsda/fjgzxx/pcslist',
-        delete: '/rsda/fjgzxx/delete',
-        deleteBatch: '/rsda/fjgzxx/deleteBatch',
-        exportXlsUrl: 'rsda/fjgzxx/exportXls',
-        importExcelUrl: 'rsda/fjgzxx/importExcel'
+        list: '/rsda/fjgzxxSpjl/list',
+        exportXlsUrl: 'rsda/fjgzxxSpjl/exportXls'
       }
     }
   },
   created() {
     //获取字典数据
-    this.initDictData();
+    this.initDictData()
   },
   computed: {
     importExcelUrl: function() {
@@ -316,11 +300,11 @@ export default {
   },
   methods: {
     initDictData() {
-      ajaxGetSelectItems('znpt_data.sys_depart,depart_name,org_code,org_code', null).then((res) => {
+      ajaxGetSelectItems('znpt_data.sys_depart,depart_name,org_code,org_code', null).then(res => {
         if (res.success) {
-          this.ssdwlist = res.result;
+          this.ssdwlist = res.result
         }
-      });
+      })
     },
     handleChange(value) {
       this.queryParam.gzksny = value[0]
@@ -334,19 +318,10 @@ export default {
     modalFormOk() {
       this.loadData()
     },
-    //一键审核
-    handleAll() {
-      this.$refs.shenhe.edit('', '双')
-      this.$refs.shenhe.title = '审核'
-    },
     //保存数据
     handleShenHe(record) {
-      if(record.spjg == '总局审核' || record.spjg == '待审核'){
-        this.$message.warn('请选择审批结果为派出所审核的数据')
-        return
-      }
-      this.$refs.shenhe.edit(record, '单')
-      this.$refs.shenhe.title = '审核'
+      this.$refs.ckls.edit(record, '单')
+      this.$refs.ckls.title = '历史'
     }
   }
 }

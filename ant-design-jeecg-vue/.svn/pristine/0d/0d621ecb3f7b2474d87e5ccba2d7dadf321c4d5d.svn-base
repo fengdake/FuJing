@@ -14,6 +14,16 @@
               <a-input placeholder="请输入身份证号" v-model="queryParam.sfzh"></a-input>
             </a-form-item>
           </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="开始时间">
+              <j-date placeholder="请选择开始时间" v-model="queryParam.createTime_begin" :showTime="true" dateFormat="YYYY-MM-DD"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="结束时间">
+              <j-date placeholder="请选择结束时间" v-model="queryParam.createTime_end" :showTime="true" dateFormat="YYYY-MM-DD"/>
+            </a-form-item>
+          </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="辅警编号">
@@ -109,28 +119,11 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" v-has="'add:zj'" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" class="moBan" @click="handleExportXls('辅警人员基本信息')">导出</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0" v-has="'add:zj'">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel">
-            <a-icon type="delete" />删除
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作
-          <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
+      <a-button type="primary" icon="download" class="moBan" @click="handleExportXls('辅警基本信息审批记录')">导出</a-button>
     </div>
 
     <!-- table区域-begin -->
     <div>
-      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
-        <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
-        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-      </div>
       <a-table
         ref="table"
         bordered
@@ -138,7 +131,6 @@
         size="small"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         @change="handleTableChange"
         :columns="columns"
         :dataSource="dataSource"
@@ -150,19 +142,6 @@
             style=" display: inline-block;width:100px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;line-height: 100%"
           >{{text}}</font>
         </template>
-        <span slot="action" slot-scope="text, record">
-          <a @click="handleChaKan(record)">查看</a>
-          <a-divider type="vertical" />
-          <a @click="handleEdit(record)" :disabled="disabledAuth('cz:fj')">编辑</a>
-
-          <a-divider type="vertical" />
-          <a-popconfirm
-            title="确定删除吗?"
-            @confirm="() => handleDelete(record.id)"
-          >
-            <a :disabled="disabledAuth('cz:fj')">删除</a>
-          </a-popconfirm>
-        </span>
       </a-table>
     </div>
     <!-- table区域-end -->
@@ -171,25 +150,27 @@
     <fjJbxx-modal ref="modalForm" @Refresh="Refresh"></fjJbxx-modal>
     <chakanjbxx ref="chakan"></chakanjbxx>
     <!-- 高级查询 -->
-    <gjcx ref='gaoji' @close='close'></gjcx>
+    <gjcx ref="gaoji" @close="close"></gjcx>
   </a-card>
 </template>
 
 <script>
 import FjJbxxModal from './modules/FjJbxxModal'
 import chakanjbxx from './modules/chakanjbxx'
-import gjcx from './modules/Fjjbxxgjcx'//高级查询
+import gjcx from './modules/Fjjbxxgjcx' //高级查询
 import { ajaxGetSelectItems } from '@/api/api'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import moment from 'moment'
 import { DisabledAuthFilterMixin } from '@/mixins/DisabledAuthFilterMixin'
+import JDate from '@/components/jeecg/JDate'
 
 export default {
   name: 'FjJbxxList',
   mixins: [JeecgListMixin, DisabledAuthFilterMixin],
   components: {
     FjJbxxModal,
-    chakanjbxx,gjcx
+    chakanjbxx,
+    gjcx,JDate
   },
   data() {
     return {
@@ -226,6 +207,24 @@ export default {
           dataIndex: 'xb',
           width: 100,
           fixed: 'left'
+        },
+        {
+          title: '操作方式',
+          align: 'center',
+          dataIndex: 'czfs',
+          width: 100,
+        },
+        {
+          title: '操作时间',
+          align: 'center',
+          dataIndex: 'createTime',
+          width: 100,
+        },
+        {
+          title: '操作人',
+          align: 'center',
+          dataIndex: 'createBy',
+          width: 100,
         },
         {
           title: '民族',
@@ -281,11 +280,6 @@ export default {
           title: '学位',
           align: 'center',
           dataIndex: 'xw'
-        },
-        {
-          title: '学位名称',
-          align: 'center',
-          dataIndex: 'xwmc'
         },
         {
           title: '政治面貌',
@@ -383,22 +377,14 @@ export default {
           align: 'center',
           scopedSlots: { customRender: 'taskResult' },
           dataIndex: 'czdz'
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          align: 'center',
-          scopedSlots: { customRender: 'action' },
-          width: 150,
-          fixed: 'right'
         }
       ],
       url: {
-        list: '/rsda/fjJbxx/list',
-        delete: '/rsda/fjJbxx/delete',
-        deleteBatch: '/rsda/fjJbxx/deleteBatch',
-        exportXlsUrl: 'rsda/fjJbxx/exportXls',
-        importExcelUrl: 'rsda/fjJbxx/importExcel'
+        list: '/rsda/fjjbxxSpjl/list',
+        delete: '/rsda/fjjbxxSpjl/delete',
+        deleteBatch: '/rsda/fjjbxxSpjl/deleteBatch',
+        exportXlsUrl: 'rsda/fjjbxxSpjl/exportXls',
+        importExcelUrl: 'rsda/fjjbxxSpjl/importExcel'
       }
     }
   },
@@ -447,14 +433,13 @@ export default {
       this.$refs.chakan.title = '查看基本信息'
     },
     //高级查询
-    superQuery(){
+    superQuery() {
       this.$refs.gaoji.dakai()
     },
-    close(queryParam){
+    close(queryParam) {
       this.queryParam = queryParam
-      this.loadData(1);
+      this.loadData(1)
     },
-    //重置
     searchReset() {
       this.queryParam = {}
       this.loadData(1);
